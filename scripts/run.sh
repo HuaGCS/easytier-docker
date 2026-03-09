@@ -87,7 +87,12 @@ log "[Core] Starting easytier-core..."
 ARGS=()
 
 if [ "$WEB_ENABLE" = "true" ]; then
-  ARGS+=("--config-dir" "$CONFIG_DIR")
+  # 查找 config 目录下所有 toml 文件作为配置
+  for cfg in "$CONFIG_DIR"/*.toml; do
+    if [ -f "$cfg" ]; then
+      ARGS+=("--config-file" "$cfg")
+    fi
+  done
   
   if [ -n "$WEB_REMOTE_API" ]; then
       # If WEB_REMOTE_API is set, use it directly
