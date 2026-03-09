@@ -1,6 +1,6 @@
 # EasyTier Docker
 
-[![Release](./actions/workflows/release.yml/badge.svg)](./actions/workflows/release.yml)
+[![Release](https://github.com/HuaGCS/easytier-docker/actions/workflows/release.yml/badge.svg)](https://github.com/HuaGCS/easytier-docker/actions/workflows/release.yml)
 [![Pre-release](https://github.com/HuaGCS/easytier-docker/actions/workflows/pre.yml/badge.svg)](https://github.com/HuaGCS/easytier-docker/actions/workflows/pre.yml)
 [![CI](https://github.com/HuaGCS/easytier-docker/actions/workflows/ci.yml/badge.svg)](https://github.com/HuaGCS/easytier-docker/actions/workflows/ci.yml)
 
