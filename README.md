@@ -70,7 +70,7 @@ services:
 <!-- BEGIN_COMPOSE_WEB -->
 ```yaml
 # 单 Web 控制台部署
-# 镜像说明: https://hub.docker.com/r/majosissi/easytier-web
+# 镜像说明: https://hub.docker.com/r/huagcs/easytier-web
 services:
   easytier-web:
     # huagcs/easytier:latest  最新 Release 正式版
