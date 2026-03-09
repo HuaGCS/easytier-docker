@@ -13,7 +13,7 @@
 <!-- BEGIN_COMPOSE_CORE -->
 ```yaml
 # Core + Web 控制台一体部署
-# 镜像说明: https://hub.docker.com/r/majosissi/easytier
+# 镜像说明: https://hub.docker.com/r/huagcs/easytier
 services:
   easytier:
     # huagcs/easytier:latest  最新 Release 正式版
