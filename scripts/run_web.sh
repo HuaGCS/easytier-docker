@@ -22,22 +22,12 @@ WEB_SERVER_PORT=${WEB_SERVER_PORT:-22020}
 WEB_SERVER_PROTOCOL=${WEB_SERVER_PROTOCOL:-udp}
 WEB_DEFAULT_API_HOST=${WEB_DEFAULT_API_HOST:-http://127.0.0.1:$WEB_API_PORT}
 WEB_LOG_LEVEL=${WEB_LOG_LEVEL:-warn}
-WEB_DATA_DIR=/app/data
-
-# Custom entrypoint command
-CORE_EXTRA_ARGS=()
-if [ "$#" -gt 0 ]; then
-  if [ "${1#-}" = "$1" ]; then
-    log "[Core] Custom command detected: $*"
-    exec "$@"
-  else
-    CORE_EXTRA_ARGS=("$@")
-  fi
-fi
+WEB_DATA_DIR=${WEB_DATA_DIR:-/app/data}
 
 # Ensure web directory exists
 mkdir -p "$WEB_DATA_DIR/logs"
 
+# Custom entrypoint command
 WEB_EXTRA_ARGS=()
 if [ "$#" -gt 0 ]; then
   if [ "${1#-}" = "$1" ]; then

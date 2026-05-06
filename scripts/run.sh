@@ -15,6 +15,18 @@ format_cmd() {
   done
 }
 
+has_config_server_arg() {
+  local arg
+  for arg in "$@"; do
+    case "$arg" in
+      -w|--config-server|--config-server=*)
+        return 0
+        ;;
+    esac
+  done
+  return 1
+}
+
 # Default values
 WEB_ENABLE=${WEB_ENABLE:-false}
 WEB_REMOTE_API=${WEB_REMOTE_API:-}
@@ -25,8 +37,8 @@ WEB_SERVER_PORT=${WEB_SERVER_PORT:-22020}
 WEB_SERVER_PROTOCOL=${WEB_SERVER_PROTOCOL:-udp}
 WEB_DEFAULT_API_HOST=${WEB_DEFAULT_API_HOST:-http://127.0.0.1:$WEB_API_PORT}
 WEB_LOG_LEVEL=${WEB_LOG_LEVEL:-warn}
-WEB_DATA_DIR=/app/data
-CONFIG_DIR=/app/data/config
+WEB_DATA_DIR=${WEB_DATA_DIR:-/app/data}
+CONFIG_DIR=${CONFIG_DIR:-/app/data/config}
 
 # Custom entrypoint command
 CORE_EXTRA_ARGS=()
@@ -93,19 +105,22 @@ if [ "$WEB_ENABLE" = "true" ]; then
       ARGS+=("--config-file" "$cfg")
     fi
   done
-  
-  if [ -n "$WEB_REMOTE_API" ]; then
-      # If WEB_REMOTE_API is set, use it directly
-      ARGS+=("-w" "$WEB_REMOTE_API")
+
+  if has_config_server_arg "${CORE_EXTRA_ARGS[@]}"; then
+    log "[Core] Config server argument provided by command; skipping auto -w."
+  elif [ -n "$WEB_REMOTE_API" ]; then
+    # If WEB_REMOTE_API is set, use it directly.
+    ARGS+=("-w" "$WEB_REMOTE_API")
   elif [ -n "$WEB_USERNAME" ]; then
-      # Otherwise, use WEB_USERNAME if set
-      ARGS+=("-w" "$WEB_SERVER_PROTOCOL://127.0.0.1:$WEB_SERVER_PORT/$WEB_USERNAME")
+    # Otherwise, connect to the local Web service when enabled.
+    ARGS+=("-w" "$WEB_SERVER_PROTOCOL://127.0.0.1:$WEB_SERVER_PORT/$WEB_USERNAME")
   fi
 fi
 
 # Add machine ID if WEB_ENABLE is true or WEB_REMOTE_API is set
 if [ "$WEB_ENABLE" = "true" ] || [ -n "$WEB_REMOTE_API" ]; then
   MACHINE_ID_FILE="$WEB_DATA_DIR/et_machine_id"
+  mkdir -p "$WEB_DATA_DIR"
   if [ ! -f "$MACHINE_ID_FILE" ]; then
       log "[Core] Generating new machine ID..."
       cat /proc/sys/kernel/random/uuid > "$MACHINE_ID_FILE"
@@ -113,6 +128,10 @@ if [ "$WEB_ENABLE" = "true" ] || [ -n "$WEB_REMOTE_API" ]; then
   MACHINE_ID=$(cat "$MACHINE_ID_FILE")
   log "[Core] Using machine ID: $MACHINE_ID"
   ARGS+=("--machine-id" "$MACHINE_ID")
+fi
+
+if [ ${#CORE_EXTRA_ARGS[@]} -gt 0 ]; then
+  ARGS+=("${CORE_EXTRA_ARGS[@]}")
 fi
 
 log "[Core] Executing command: $(format_cmd easytier-core "${ARGS[@]}")"

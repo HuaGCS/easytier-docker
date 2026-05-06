@@ -36,7 +36,7 @@ echo "Downloading EasyTier $VERSION for $ARCH..."
 URL="https://github.com/EasyTier/EasyTier/releases/download/${VERSION}/easytier-linux-${ARCH}-${VERSION}.zip"
 
 echo "URL: $URL"
-curl -L -o easytier.zip "$URL"
+curl -fL --retry 3 --retry-delay 2 -o easytier.zip "$URL"
 unzip easytier.zip
 # The zip usually contains a folder named easytier-linux-<ARCH>
 # But sometimes it might be different or flat. The install script assumes:

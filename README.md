@@ -73,9 +73,9 @@ services:
 # 镜像说明: https://hub.docker.com/r/huagcs/easytier-web
 services:
   easytier-web:
-    # huagcs/easytier:latest  最新 Release 正式版
-    # huagcs/easytier:pre     最新 Pre-release 预览版
-    # huagcs/easytier:ci      最新 Action 构建版 (合并主线的版本, 自动更新, 稳定性不保证)
+    # huagcs/easytier-web:latest  最新 Release 正式版
+    # huagcs/easytier-web:pre     最新 Pre-release 预览版
+    # huagcs/easytier-web:ci      最新 Action 构建版 (合并主线的版本, 自动更新, 稳定性不保证)
     image: huagcs/easytier-web:latest
     container_name: easytier-web
     restart: always
@@ -83,6 +83,7 @@ services:
     ports:
       - 11211:11211
       - 22020:22020
+      - 22020:22020/udp
     environment:
       # 时区
       - TZ=Asia/Shanghai
